@@ -1,0 +1,26 @@
+[
+  {
+    "domain": "privacy",
+    "decision_type": "domain_signoff",
+    "what": "Approved data sharing with provincial partner using anonymised identifiers only.",
+    "why": "PIA completed. No direct identifiers transmitted. Compliant with Privacy Act s.8(2)(a).",
+    "reviewer_name": "Dr. Sarah Mitchell",
+    "reviewer_role": "Chief Privacy Officer"
+  },
+  {
+    "domain": "compliance",
+    "decision_type": "domain_signoff",
+    "what": "Project meets all requirements of the TBS Directive on Service and Digital.",
+    "why": "Retention schedule defined. Data quality standards documented. Interoperability profile complete.",
+    "reviewer_name": "Robert Fillion",
+    "reviewer_role": "Compliance Lead"
+  },
+  {
+    "domain": "tech_security",
+    "decision_type": "domain_signoff",
+    "what": "Security architecture approved. mTLS required. No data persistence on requesting system.",
+    "why": "Threat model reviewed. API internal-facing only. TLS 1.3 in transit. Pen test required before go-live.",
+    "reviewer_name": "James Okafor",
+    "reviewer_role": "IT Security Lead"
+  }
+]

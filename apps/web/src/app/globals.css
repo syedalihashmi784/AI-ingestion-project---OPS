@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #1F3A5F;
+  --oxblood: #7A1F2B;
+  --moss: #4A5A3A;
+  --gold: #A8834A;
+}

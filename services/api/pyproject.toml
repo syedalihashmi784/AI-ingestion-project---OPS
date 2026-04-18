@@ -1,0 +1,59 @@
+# ─────────────────────────────────────────────────────────
+# services/api — FastAPI backend
+#
+# WHAT IS FASTAPI?
+#   A Python web framework for building APIs. It's fast, has
+#   automatic documentation, and uses Pydantic for data validation.
+#   DOCS: https://fastapi.tiangolo.com/
+#
+# WHAT IS AN API?
+#   An API (Application Programming Interface) is how the frontend
+#   talks to the backend. The frontend sends HTTP requests
+#   (GET, POST, etc.) and the API returns JSON data.
+#
+# HOW TO RUN THIS SERVICE:
+#   cd services/api
+#   uv run uvicorn ledger_api.main:app --reload --port 8000
+#
+#   Then open: http://localhost:8000/docs
+#   (FastAPI generates an interactive API explorer automatically)
+# ─────────────────────────────────────────────────────────
+
+[project]
+name = "ledger-api"
+version = "0.1.0"
+description = "Decision Ledger — FastAPI backend service"
+requires-python = ">=3.12"
+
+dependencies = [
+    # The API framework
+    "fastapi>=0.111.0",
+    # DOCS: https://fastapi.tiangolo.com/
+
+    # ASGI server — runs the FastAPI app
+    "uvicorn[standard]>=0.30.0",
+    # DOCS: https://www.uvicorn.org/
+
+    # Supabase Python client — talks to the database
+    "supabase>=2.4.0",
+    # DOCS: https://supabase.com/docs/reference/python/introduction
+
+    # Our shared data models
+    "ledger-schema",
+
+    # Settings from .env files
+    "pydantic-settings>=2.3.0",
+
+    # HTTP client (for calling the model gateway)
+    "httpx>=0.27.0",
+
+    # JWT token validation (for Supabase auth)
+    "python-jose[cryptography]>=3.3.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ledger_api"]

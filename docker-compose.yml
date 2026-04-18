@@ -1,0 +1,77 @@
+# ─────────────────────────────────────────────────────────
+# docker-compose.yml — Local development stack
+#
+# WHAT IS DOCKER COMPOSE?
+#   A tool that starts multiple Docker containers together.
+#   Instead of manually starting Redis and other services,
+#   `docker compose up` starts everything at once.
+#
+# NOTE:
+#   Supabase runs via the Supabase CLI (supabase start),
+#   not docker-compose. This file handles the other services.
+#
+# HOW TO USE:
+#   docker compose up -d      ← start in background
+#   docker compose down       ← stop everything
+#   docker compose logs -f    ← watch logs
+#
+# DOCS: https://docs.docker.com/compose/
+# ─────────────────────────────────────────────────────────
+
+services:
+
+  # ── Redis ────────────────────────────────────────────────
+  # Used by the model gateway to cache AI responses.
+  # Caching means we don't pay for the same AI call twice.
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"    # localhost:6379 → container:6379
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  # ── FastAPI backend ──────────────────────────────────────
+  # Only used in full-stack local testing.
+  # For development, run `uvicorn` directly (faster reloading).
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      # Mount source code so changes reflect without rebuild
+      - ./services/api/src:/app/src
+    profiles:
+      # Only start with: docker compose --profile full up
+      # In dev, run uvicorn directly instead
+      - full
+
+  # ── Model gateway ────────────────────────────────────────
+  model-gateway:
+    build:
+      context: .
+      dockerfile: services/model-gateway/Dockerfile
+    ports:
+      - "8001:8001"
+    env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    profiles:
+      - full
+
+volumes:
+  redis_data:    # Persists Redis data between restarts

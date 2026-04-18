@@ -1,0 +1,47 @@
+# ─────────────────────────────────────────────────────────
+# ROOT pyproject.toml — uv workspace configuration
+#
+# WHAT IS THIS?
+#   This file tells uv that this is a "workspace" — a single
+#   repo containing multiple Python packages/services that
+#   share dependencies and can reference each other.
+#
+# HOW uv WORKSPACES WORK:
+#   - Each service/package has its OWN pyproject.toml listing
+#     its specific dependencies
+#   - This root file declares which folders are part of the workspace
+#   - Running `uv sync` from the root installs everything
+#
+# DOCS: https://docs.astral.sh/uv/concepts/workspaces/
+# ─────────────────────────────────────────────────────────
+
+[tool.uv.workspace]
+members = [
+    "packages/schema",
+    "packages/supabase_client",
+    "packages/model_gateway_client",
+    "services/api",
+    "services/ingest-worker",
+    "services/model-gateway",
+    "services/retrieval-service",
+]
+
+[tool.uv]
+# Pin Python version for the whole workspace
+# Everyone on the team uses this exact version — no "works on my machine"
+python = "3.12"
+
+[tool.ruff]
+# Ruff is a very fast Python linter (checks code style)
+# DOCS: https://docs.astral.sh/ruff/
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+
+[tool.mypy]
+# Mypy checks TypeScript-style type annotations in Python
+# DOCS: https://mypy.readthedocs.io/
+python_version = "3.12"
+strict = true
